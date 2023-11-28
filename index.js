@@ -6,6 +6,9 @@ require("dotenv").config();
 const app = express();
 const port = process.env.PORT || 5000;
 
+const userRouter = require("./Routes/v1/userRoute");
+const biodataRouter = require("./Routes/v1/bioDataRoute");
+
 // middleware
 app.use(cors({
     origin: [
@@ -17,9 +20,13 @@ app.use(cors({
 app.use(express.json());
 
 
+// Route setup
+app.use('/api/v1/users',userRouter);
+app.use('/api/v1/biodata',biodataRouter);
 
 
 
+// testing route
 app.get("/soulMate", (req, res) => {
     res.send("soulMate is running....");
 });
