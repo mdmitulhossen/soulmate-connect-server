@@ -8,6 +8,9 @@ const port = process.env.PORT || 5000;
 
 const userRouter = require("./Routes/v1/userRoute");
 const biodataRouter = require("./Routes/v1/bioDataRoute");
+const premiumBioRoute = require("./Routes/v1/premiumBioRoute");
+const paymentRoute = require("./Routes/v1/paymentRoute");
+const contactRequestRoute = require("./Routes/v1/contactRequestRoute");
 
 // middleware
 app.use(cors({
@@ -23,6 +26,9 @@ app.use(express.json());
 // Route setup
 app.use('/api/v1/users',userRouter);
 app.use('/api/v1/biodata',biodataRouter);
+app.use('/api/v1/premiumBio',premiumBioRoute);
+app.use('/api/v1/payment',paymentRoute);
+app.use('/api/v1/contactRequest',contactRequestRoute);
 
 
 

@@ -8,6 +8,7 @@ const biodataSchema = new mongoose.Schema({
     image: { type: String }, // You might want to store the image URL
     fatherName: { type: String },
     motherName: { type: String },
+    age: { type: String },
     gender: { type: String },
     dob: { type: Date },
     gender: {
@@ -21,10 +22,10 @@ const biodataSchema = new mongoose.Schema({
     race: { type: String },
     presentDivision: { type: String },
     parmanentDivision: { type: String },
-    partnerAge: { type: Number },
+    partnerAge: { type: String },
     partnerHeight: { type: String },
     partnerWeight: { type: String }, 
-    premium: { type: Boolean,default:false },
+    // premium: { type: Boolean,default:false },
     married: { type: Boolean,default:false },
     time: { type: Date, default: Date.now },
 });

@@ -1,5 +1,5 @@
 const Biodata = require("../../Models/v1/bioDataModel");
-const { findOneAndUpdate } = require("../../Models/v1/userModel");
+
 
 
 // create Biodata
@@ -32,13 +32,14 @@ const createBioDataOrUpdate = async (req, res) => {
                 partnerAge,
                 partnerHeight,
                 partnerWeight,
-                premium: premium || false,
+                // premium: premium || false,
                 married: married || false,
             };
-            const updateBiodata = await findOneAndUpdate({ email: email }, newBioData, { new: true });
+            const updateBiodata = await Biodata.findOneAndUpdate({ email: email }, newBioData, { new: true });
             return res.status(201).json(updateBiodata);
         } else {
-            const newBioCreate =new Biodata({ 
+
+            const newBioCreate = new Biodata({
                 B_ID: count + 1,
                 name,
                 email,
@@ -58,7 +59,7 @@ const createBioDataOrUpdate = async (req, res) => {
                 partnerAge,
                 partnerHeight,
                 partnerWeight,
-                premium: premium || false,
+                // premium: premium || false,
                 married: married || false,
             })
             const savedBioData = await newBioCreate.save();
@@ -66,6 +67,7 @@ const createBioDataOrUpdate = async (req, res) => {
         }
 
     } catch (error) {
+        console.log(error)
         if (error.name === 'ValidationError') {
             res.status(400).json({ message: error.message });
         } else {
@@ -74,9 +76,20 @@ const createBioDataOrUpdate = async (req, res) => {
     }
 }
 
-// get all Biodata
+
+// get one & all Biodata
 const getAllBiodata = async (req, res) => {
     try {
+        const queryEmail = req.query.email;
+        if (queryEmail) {
+            const data = await Biodata.findOne({ email: queryEmail });
+            if (data) {
+                return res.status(200).json(data);
+            } else {
+                return res.status(404).json({ message: "No data found" });
+            }
+        }
+
         const users = await Biodata.find({});
 
         res.status(200).json(users);
@@ -85,8 +98,24 @@ const getAllBiodata = async (req, res) => {
     }
 }
 
+// biodata by id
+
+const getBiodataById = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const data = await Biodata.findOne({B_ID:id});
+        if (data) {
+            return res.status(200).json(data);
+        } else {
+            return res.status(404).json({ message: "No data found" });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
 
 module.exports = {
     createBioDataOrUpdate,
-    getAllBiodata
+    getAllBiodata,
+    getBiodataById
 }
