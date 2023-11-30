@@ -1,8 +1,9 @@
 const express = require("express");
+require("dotenv").config();
 const cors = require("cors");
 const connectDB = require("./db/connectDB");
 const globalErrorHandler = require("./utils/globalErrorHandler");
-require("dotenv").config();
+
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -11,16 +12,19 @@ const biodataRouter = require("./Routes/v1/bioDataRoute");
 const premiumBioRoute = require("./Routes/v1/premiumBioRoute");
 const paymentRoute = require("./Routes/v1/paymentRoute");
 const contactRequestRoute = require("./Routes/v1/contactRequestRoute");
+const dashboardDataRoute = require("./Routes/v1/dashboardDataRoute");
 
 // middleware
 app.use(cors({
     origin: [
-        process.env.LOCAL_CLIENT,
-        process.env.CLIENT,
+       'https://soulmate-connect.web.app',
+       'http://localhost:5173'
     ],
-    credentials: true
+    credentials: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
 }));
 app.use(express.json());
+
 
 
 // Route setup
@@ -29,6 +33,7 @@ app.use('/api/v1/biodata',biodataRouter);
 app.use('/api/v1/premiumBio',premiumBioRoute);
 app.use('/api/v1/payment',paymentRoute);
 app.use('/api/v1/contactRequest',contactRequestRoute);
+app.use('/api/v1/dashboardData',dashboardDataRoute);
 
 
 

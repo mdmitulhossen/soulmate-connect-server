@@ -25,7 +25,10 @@ const connectDB = async () => {
   console.log("connectting to database");
   const mongoURI = getConnectionString();
 
-  await mongoose.connect(mongoURI, { dbName: process.env.DB_NAME });
+  await mongoose.connect(mongoURI, { dbName: process.env.DB_NAME },{
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
   console.log("connected to database");
 };
 

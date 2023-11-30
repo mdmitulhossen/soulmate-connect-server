@@ -16,6 +16,10 @@ const userSchema = new mongoose.Schema({
     enum: ['user', 'admin'], // Example roles: user, admin
     default: 'user', // Default role is user
   },
+  premium: {
+    type: Boolean,
+    default: false,
+  },
   favouriteBio: [String],
   time: {
     type: Date,

@@ -70,9 +70,8 @@ const deletePremiumBioData = async (req, res) => {
 
 const updatePremiumBioData = async (req, res) => {
     try {
-        const queryemail = req.query.email;
         const { B_ID, name, email, isPremium } = req.body || {};
-        const updatePremiumBio = await PremiumBio.findOneAndUpdate({ email: queryemail }, { B_ID, name, email, isPremium }, { new: true });
+        const updatePremiumBio = await PremiumBio.findOneAndUpdate({ email: email }, { B_ID, name, email, isPremium }, { new: true });
         return res.status(200).json(updatePremiumBio);
     } catch (error) {
         return res.status(500).json(error);

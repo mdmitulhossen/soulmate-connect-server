@@ -16,6 +16,7 @@ const createUser = async (req, res) => {
         const newUser = new User({
             name,
             email,
+            premium: false,
             role: role || 'user', 
             favouriteBio:favouriteBio || [],
         });
@@ -48,7 +49,7 @@ const getAllUsers = async (req, res) => {
 const getUserByQuery = async (req, res) => {
     try {
         const queryEmail = req.query.email;
-        const users = await User.find({ email: queryEmail });
+        const users = await User.findOne({ email: queryEmail });
 
         res.status(200).json(users);
     } catch (error) {
@@ -59,12 +60,11 @@ const getUserByQuery = async (req, res) => {
 // update user by email
 const updateUserByEmail = async (req, res) => {
     try {
-        const queryEmail = req.query.email;
-        const { name, email, role, premium } = req.body;
+        const { name, email, role, premium,favouriteBio } = req.body;
 
         const updatedUser = await User.findOneAndUpdate(
-            { email: queryEmail },
-            { name, email, role, premium },
+            { email: email },
+            { name, email, role, premium,favouriteBio },
             { new: true }
         );
 
