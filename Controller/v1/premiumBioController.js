@@ -35,6 +35,50 @@ const getAllPremiumBioData = async (req, res) => {
         return res.status(500).json(error);
     }
 }
+// get all premium with biodata
+
+const getAllPremiumWithBioData = async (req, res) => {
+    try {
+        const allPremiumBio = await PremiumBio.find({ isPremium: true });
+        const withBiodata = await PremiumBio.aggregate(
+            [
+                {
+                  '$match': {
+                    'isPremium': true
+                  }
+                }, {
+                  '$lookup': {
+                    'from': 'biodatas', 
+                    'localField': 'B_ID', 
+                    'foreignField': 'B_ID', 
+                    'as': 'bio'
+                  }
+                }, {
+                  '$project': {
+                    'name': 1,
+                    'email': 1,
+                    'B_ID': 1,
+                    'bio': {
+                      'gender': 1, 
+                      'image': 1, 
+                      'age': 1, 
+                      'occupation': 1, 
+                      'parmanentDivision': 1
+                    }
+                  }
+                }, {
+                  '$unwind': {
+                    'path': '$bio'
+                  }
+                }
+              ]
+        )
+
+        return res.status(200).json(withBiodata);
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+}
 
 // get premium biodata by email
 
@@ -44,8 +88,8 @@ const getPremiumBioDataByEmail = async (req, res) => {
         if (email) {
             const getPremiumBioData = await PremiumBio.findOne({ email: email });
             return res.status(200).json(getPremiumBioData);
-        }else{
-            return res.status(400).json({error:"email is required"})
+        } else {
+            return res.status(400).json({ error: "email is required" })
         }
 
     } catch (error) {
@@ -83,5 +127,6 @@ module.exports = {
     getAllPremiumBioData,
     deletePremiumBioData,
     updatePremiumBioData,
-    getPremiumBioDataByEmail
+    getPremiumBioDataByEmail,
+    getAllPremiumWithBioData
 }

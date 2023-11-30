@@ -90,6 +90,16 @@ const getAllBiodata = async (req, res) => {
             }
         }
 
+        const querygender = req.query.gender;
+        if(querygender){
+            const data = await Biodata.find({ gender: querygender });
+            if (data) {
+                return res.status(200).json(data);
+            } else {
+                return res.status(404).json({ message: "No data found" });
+            }
+        }
+
         const users = await Biodata.find({});
 
         res.status(200).json(users);
