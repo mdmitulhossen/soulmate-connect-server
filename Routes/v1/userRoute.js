@@ -1,4 +1,4 @@
-const { createUser, getAllUsers, getUserByQuery, updateUserByEmail, deleteUserByEmail } = require('../../Controller/v1/userControllers')
+const { createUser, getAllUsers, getUserByQuery, updateUserByEmail, deleteUserByEmail, getfavouriteBioByusers } = require('../../Controller/v1/userControllers')
 
 const router = require('express').Router()
 
@@ -8,6 +8,7 @@ router.get('/',getAllUsers)
 router.get('/user',getUserByQuery)
 router.put('/user',updateUserByEmail)
 router.delete('/user',deleteUserByEmail)
+router.get('/favouriteUser',getfavouriteBioByusers)
 
 
 module.exports = router

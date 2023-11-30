@@ -17,8 +17,8 @@ const createUser = async (req, res) => {
             name,
             email,
             premium: false,
-            role: role || 'user', 
-            favouriteBio:favouriteBio || [],
+            role: role || 'user',
+            favouriteBio: favouriteBio || [],
         });
 
         const savedUser = await newUser.save();
@@ -56,15 +56,60 @@ const getUserByQuery = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 }
+// get user by query
+const getfavouriteBioByusers = async (req, res) => {
+    try {
+        const queryEmail = req.query.email;
+        // const users = await User.findOne({ email: queryEmail });
+
+        const users = await User.aggregate([
+            { $match: { email: queryEmail } },
+            {
+                $unwind: "$favouriteBio" // Unwind the array to create separate documents for each array element
+            },
+            {
+                $lookup: {
+                    from: "biodatas",
+                    localField: "favouriteBio",
+                    foreignField: "B_ID",
+                    as: "matchedBio"
+                }
+            },
+            {
+                $unwind: "$matchedBio" // Unwind the result of the lookup
+            },
+            {
+                $group: {
+                    _id: "$_id",
+                    favouriteBio: { $push: "$favouriteBio" },
+                    matchedBio: { $push: "$matchedBio" }
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    favouriteBio: 1,
+                    matchedBio: 1
+                }
+            }
+
+
+        ])
+
+        res.status(200).json(users);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
 
 // update user by email
 const updateUserByEmail = async (req, res) => {
     try {
-        const { name, email, role, premium,favouriteBio } = req.body;
+        const { name, email, role, premium, favouriteBio } = req.body;
 
         const updatedUser = await User.findOneAndUpdate(
             { email: email },
-            { name, email, role, premium,favouriteBio },
+            { name, email, role, premium, favouriteBio },
             { new: true }
         );
 
@@ -93,5 +138,6 @@ module.exports = {
     getAllUsers,
     getUserByQuery,
     updateUserByEmail,
-    deleteUserByEmail
+    deleteUserByEmail,
+    getfavouriteBioByusers
 }
